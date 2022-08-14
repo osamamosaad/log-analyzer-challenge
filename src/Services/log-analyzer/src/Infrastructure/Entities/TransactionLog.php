@@ -16,19 +16,6 @@ use Doctrine\ORM\Mapping\{
     ManyToOne
 };
 
-enum TransactionLogMethod: string
-{
-    case GET        = 'GET';
-    case POST       = 'POST';
-    case PUT        = 'PUT';
-    case PATCH      = 'PATCH';
-    case DELETE     = 'DELETE';
-    case HEAD       = 'HEAD';
-    case TRACE      = 'TRACE';
-    case CONNECT    = 'CONNECT';
-    case OPTIONS    = 'OPTIONS';
-}
-
 #[Entity(), Table(name: 'transaction_log')]
 class TransactionLog
 {

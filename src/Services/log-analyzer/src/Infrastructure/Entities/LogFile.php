@@ -8,13 +8,6 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\{Column, Entity, Table, Id, GeneratedValue};
 
-enum LogFileStatus: string
-{
-    case InProgress = 'in-progress';
-    case Stopped    = 'stopped';
-    case Done       = 'done';
-}
-
 #[Entity(), Table(name: 'log_file')]
 class LogFile
 {
