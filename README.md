@@ -10,8 +10,9 @@
 - The default database is called `database` and the username and password are `root` and `root`
   respectively
 - Makefile with some basic commands -->
-## Application Structure:
-  - click here [Application Structure](./AppArch.md)
+## Important Documents:
+  - [Application Structure](./wiki/AppArch.md)
+  - [How To Use The Application](./wiki/howToUse.md)
 
 ## Installation
 
