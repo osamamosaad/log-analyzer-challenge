@@ -18,6 +18,7 @@ class FileReader implements FileReaderInterface
         $this->file->setFlags(SplFileObject::DROP_NEW_LINE | SplFileObject::SKIP_EMPTY);
         $this->setTotalNumberOFLines();
         $this->file->seek(0); // Start From the first line
+        $this->lineNumber = $this->file->key();
         $this->currentLine = $this->file->current();
 
         return $this;
