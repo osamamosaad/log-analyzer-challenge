@@ -73,6 +73,11 @@ class TransactionLog
         return $this;
     }
 
+    public function getLineNum(): int
+    {
+        return $this->lineNum;
+    }
+
     public function setLogFile(LogFile $logFile): self
     {
         $this->logFile = $logFile;
