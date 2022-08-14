@@ -55,4 +55,13 @@ class TransactionLogRepository extends BaseRepository implements TransactionLogR
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function getLastLineByLogId(int $logFileId): ?TransactionLog
+    {
+        return $this->findOneBy([
+            "logFile" => $logFileId,
+        ], [
+            "id" => "DESC"
+        ]);
+    }
 }
