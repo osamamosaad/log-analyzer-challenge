@@ -16,6 +16,7 @@ use App\Services\LogAnalyzer\Libraries\{
     LogFile as LogFileLib,
     TransactionLog as TransactionLogLib,
 };
+use App\Services\LogAnalyzer\Libraries\RepositoriesInterfaces\TransactionLogRepositoryInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportLog
@@ -28,6 +29,7 @@ class ImportLog
         private LogExtractor $dataExporter,
         private LogFileLib $logFileLib,
         private TransactionLogLib $transactionLogLib,
+        private TransactionLogRepositoryInterface $transactionLogRepo,
     ) {
     }
 
@@ -40,12 +42,18 @@ class ImportLog
             $this->fileReader->totalNumberOFLines(),
         );
 
-        if ($logFile->getStatus() == LogFileStatus::Done) {
-            return true;
-        }
-
-        if ($logFile->getStatus() == LogFileStatus::Stopped) {
-            $this->fileReader->startFrom($logFile->getLastLine());
+        switch ($logFile->getStatus()) {
+            case LogFileStatus::Done:
+                return true;
+            case LogFileStatus::Stopped:
+                $this->fileReader->startFrom($logFile->getLastLine());
+                break;
+            case LogFileStatus::InProgress:
+                $lastTransactionLog = $this->transactionLogRepo->getLastLineByLogId($logFile->getId());
+                if (null != $lastTransactionLog) {
+                    $this->fileReader->startFrom($lastTransactionLog->getLineNum());
+                }
+                break;
         }
 
 
