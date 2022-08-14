@@ -1,6 +1,7 @@
-# L1 Challenge Devbox
+## Log service
+---
 
-## Summary
+<!--## Summary
 
 - Dockerfile & Docker-compose setup with PHP8.1 and MySQL
 - Symfony 5.4 installation with a /healthz endpoint and a test for it
@@ -8,12 +9,14 @@
   endpoint: http://localhost:9002/healthz
 - The default database is called `database` and the username and password are `root` and `root`
   respectively
-- Makefile with some basic commands
+- Makefile with some basic commands -->
+## Application Structure:
+  - click here [Application Structure](./AppArch.md)
 
 ## Installation
 
 ```
-  make run && make install
+  make run && make install && make migration
 ```
 
 ## Run commands inside the container
