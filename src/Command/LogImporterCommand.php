@@ -11,6 +11,7 @@ use Symfony\Component\Console\{
     Input\InputInterface,
     Output\OutputInterface,
 };
+use Symfony\Component\Console\Helper\ProgressBar;
 
 #[AsCommand(
     name: 'app:log-importer',
@@ -38,7 +39,8 @@ class LogImporterCommand extends Command
         $filePath = $input->getArgument('file');
         $output->writeln(sprintf('Start to Import, %s', $filePath));
 
-        $this->importService->exec($filePath);
+        $progressBar = new ProgressBar($output);
+        $this->importService->exec($filePath, $progressBar);
         $output->writeln('Done');
 
         return Command::SUCCESS;
