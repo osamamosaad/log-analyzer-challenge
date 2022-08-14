@@ -35,7 +35,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "App\\Services\\LogImporter\\": "src/Services/log-importer/src/"
+            "App\\Services\\LogAnalyzer\\": "src/Services/log-analyzer/src/"
         }
     },
     "autoload-dev": {

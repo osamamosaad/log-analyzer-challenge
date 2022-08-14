@@ -25,3 +25,6 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: [ 'controller.service_arguments' ]
+
+    App\Services\LogAnalyzer\:
+        resource: '../src/Services/log-analyzer/src/'
