@@ -16,10 +16,11 @@ use App\Services\LogAnalyzer\Libraries\{
     LogFile as LogFileLib,
     TransactionLog as TransactionLogLib,
 };
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportLog
 {
-    private $logFile;
+    private const BATCH_SIZE = 200;
 
     public function __construct(
         private EntityManagerInterface $entityManage,
@@ -30,7 +31,7 @@ class ImportLog
     ) {
     }
 
-    public function exec(string $filePath): bool
+    public function exec(string $filePath, ProgressBar $progressBar): bool
     {
         $this->fileReader->open($filePath);
 
@@ -38,7 +39,7 @@ class ImportLog
             $filePath,
             $this->fileReader->totalNumberOFLines(),
         );
-        $this->logFile = $logFile;
+
         if ($logFile->getStatus() == LogFileStatus::Done) {
             return true;
         }
@@ -47,8 +48,10 @@ class ImportLog
             $this->fileReader->startFrom($logFile->getLastLine());
         }
 
+
         $batchInc = 0;
-        $batchSize = 100;
+        $batchSize = self::BATCH_SIZE;
+        $progressBar->setMaxSteps($this->fileReader->totalNumberOFLines());
         try {
             while ($this->fileReader->next()) {
                 if (0 == $batchInc) {
@@ -56,7 +59,7 @@ class ImportLog
                 }
 
                 $entityLogData = $this->dataExporter->extract($this->fileReader->currentLine());
-                // dd($this->fileReader->lineNumber());
+
                 if ($entityLogData) {
                     $this->transactionLogLib->add(
                         $logFile,
@@ -80,6 +83,7 @@ class ImportLog
                 } else {
                     $batchInc++;
                 }
+                $progressBar->advance();
             }
         } catch (\Throwable $th) {
             $this->entityManage->rollback();
@@ -97,11 +101,5 @@ class ImportLog
         $this->logFileLib->update($logFile);
 
         return true;
-    }
-
-    public function __destruct()
-    {
-        $this->logFile->setStatus(LogFileStatus::Stopped);
-        $this->logFileLib->update($this->logFile);
     }
 }
