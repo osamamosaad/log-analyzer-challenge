@@ -8,20 +8,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Services\LogAnalyzer\Exceptions\ImportStoppedException;
 use App\Services\LogAnalyzer\Infrastructure\{
     Entities\LogFileStatus,
+    Entities\TransactionLogMethod,
+    Adapters\ProgressBarInterface,
 };
-use App\Services\LogAnalyzer\Infrastructure\Entities\TransactionLogMethod;
 use App\Services\LogAnalyzer\Libraries\{
     FileReaderInterface,
     LogExtractor,
     LogFile as LogFileLib,
     TransactionLog as TransactionLogLib,
+    RepositoriesInterfaces\TransactionLogRepositoryInterface,
 };
-use App\Services\LogAnalyzer\Libraries\RepositoriesInterfaces\TransactionLogRepositoryInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportLog
 {
-    private const BATCH_SIZE = 200;
+    private int $batchSize = 200;
 
     public function __construct(
         private EntityManagerInterface $entityManage,
@@ -33,7 +33,7 @@ class ImportLog
     ) {
     }
 
-    public function exec(string $filePath, ProgressBar $progressBar): bool
+    public function exec(string $filePath, ProgressBarInterface $progressBar): bool
     {
         $this->fileReader->open($filePath);
 
@@ -56,9 +56,7 @@ class ImportLog
                 break;
         }
 
-
         $batchInc = 0;
-        $batchSize = self::BATCH_SIZE;
         $progressBar->setMaxSteps($this->fileReader->totalNumberOFLines());
         try {
             while ($this->fileReader->next()) {
@@ -82,7 +80,7 @@ class ImportLog
                 }
 
                 if (
-                    $batchInc == $batchSize ||
+                    $batchInc == $this->batchSize ||
                     $this->fileReader->totalNumberOFLines() == $this->fileReader->lineNumber()
                 ) {
                     $this->entityManage->commit();

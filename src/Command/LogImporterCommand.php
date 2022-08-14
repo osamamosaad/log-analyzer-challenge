@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Services\LogAnalyzer\Application\Command\ImportLog;
-
+use App\Services\LogAnalyzer\Infrastructure\Adapters\ProgressBar as AdaptersProgressBar;
 use Symfony\Component\Console\{
     Command\Command,
     Attribute\AsCommand,
@@ -40,8 +40,8 @@ class LogImporterCommand extends Command
         $output->writeln(sprintf('Start to Import, %s', $filePath));
 
         $progressBar = new ProgressBar($output);
-        $this->importService->exec($filePath, $progressBar);
-        $output->writeln('Done');
+        $this->importService->exec($filePath, new AdaptersProgressBar($progressBar));
+        $output->writeln("\nDone");
 
         return Command::SUCCESS;
     }
