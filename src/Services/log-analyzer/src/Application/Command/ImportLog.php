@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\LogAnalyzer\Application\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Services\LogAnalyzer\Exceptions\ImporteStoppedException;
+use App\Services\LogAnalyzer\Exceptions\ImportStoppedException;
 use App\Services\LogAnalyzer\Infrastructure\{
     Entities\LogFileStatus,
 };
@@ -89,7 +89,7 @@ class ImportLog
             $logFile->setStatus(LogFileStatus::Stopped);
             $this->logFileLib->update($logFile);
 
-            throw new ImporteStoppedException("Stopped at log-line: {$this->fileReader->lineNumber()}", $th);
+            throw new ImportStoppedException("Stopped at log-line: {$this->fileReader->lineNumber()}", $th);
         }
 
         $logFile->setLastLine($this->fileReader->lineNumber());

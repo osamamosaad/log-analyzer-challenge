@@ -7,7 +7,7 @@ namespace App\Services\LogAnalyzer\Exceptions;
 use Exception;
 use Throwable;
 
-class ImporteStoppedException extends Exception implements Throwable
+class ImportStoppedException extends Exception implements Throwable
 {
     private const ERR_CODE = 100;
 
