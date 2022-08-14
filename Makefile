@@ -28,6 +28,10 @@ enter-as-root:
 test:
 	@docker-compose exec --user="php" -T devbox-service /bin/sh -c 'APP_ENV="test" ./bin/phpunit --testdox'
 
+.PHONY: migration
+migration:
+	@docker-compose exec --user="php" -T devbox-service /bin/sh -c 'php bin/console doctrine:migrations:migrate --no-interaction'
+
 .PHONY: destroy
 destroy:
 	@docker-compose down --rmi local --remove-orphans
